@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safe Driving Education</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+        #video-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        #background-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        #video {
+            width: 100%;
+            height: 100%;
+        }
+        #mcq-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+        }
+        #mcq-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="video-container">
+        <video id="background-video" autoplay loop>
+            <!-- Your looped video source here -->
+            <source src="background-video.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <video id="video" controls>
+            <!-- Your video source here -->
+            <source src="" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div id="mcq-overlay">
+            <div id="mcq-content">
+                <h2 id="mcq-question">Is this correct?</h2>
+                <button id="option-1">Yes</button>
+                <button id="option-2">No</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const videos = [
+            "earth.mp4", // Replace with your video sources
+            "A001_C037_0921FG_001.mp4",
+            // Add more video sources as needed
+        ];
+        const mcqs = [
+            ["How are you?", "Fine", "Not good"], // First set of MCQs
+            ["What's your name?", "John", "Jane"]  // Second set of MCQs
+            // Add more MCQs sets as needed
+        ];
+        let currentVideoIndex = 0;
+        let currentMCQIndex = 0;
+
+        const backgroundVideo = document.getElementById('background-video');
+        const video = document.getElementById('video');
+        const mcqOverlay = document.getElementById('mcq-overlay');
+        const mcqQuestion = document.getElementById('mcq-question');
+        const option1Button = document.getElementById('option-1');
+        const option2Button = document.getElementById('option-2');
+
+        // Show MCQ overlay when the video ends
+        video.addEventListener('ended', showMCQ);
+
+        // Show MCQ overlay function
+        function showMCQ() {
+            mcqOverlay.style.display = 'block';
+            mcqQuestion.innerText = mcqs[currentVideoIndex][currentMCQIndex];
+        }
+
+        // Event listener for "Yes" button
+        option1Button.addEventListener('click', function() {
+            alert('Correct!');
+            mcqOverlay.style.display = 'none';
+            loadNextMCQ();
+        });
+
+        // Event listener for "No" button
+        option2Button.addEventListener('click', function() {
+            alert('Incorrect!');
+            mcqOverlay.style.display = 'none';
+            loadNextMCQ();
+        });
+
+        // Function to load the next MCQ
+        function loadNextMCQ() {
+            currentMCQIndex++;
+            if (currentMCQIndex >= mcqs[currentVideoIndex].length) {
+                currentMCQIndex = 0; // Reset to the first MCQ if all questions have been answered
+                loadNextVideo();
+            } else {
+                showMCQ();
+            }
+        }
+
+        // Function to load the next video
+        function loadNextVideo() {
+            currentVideoIndex++;
+            if (currentVideoIndex < videos.length) {
+                video.src = videos[currentVideoIndex];
+                video.play();
+            } else {
+                alert('No more videos!');
+                // Reset the index to play the videos from the beginning
+                currentVideoIndex = 0;
+            }
+        }
+
+        // Load the first video and start playing the looped background video when the page loads
+        window.onload = function() {
+            video.src = videos[currentVideoIndex];
+            video.play();
+            backgroundVideo.play();
+        };
+    </script>
+</body>
+</html>

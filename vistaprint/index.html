@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body style="background-color: bisque;">
+    <h1>Customize Your Visiting Car</h1>
+    <form id="cardForm">
+        <label for="number">Number:</label>
+        <input type="text" id="number" name="number" value="123456789" required><br>
+        <label for="year">Year of Establishment:</label>
+        <input type="text" id="year" name="year" value="2021" required><br>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" value="Amrit" required><br>
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="location" value="Punjab" required><br>
+        <label for="location">Logo:</label>
+        <input type="file" name="logo" id="logo"> <br>
+        <button type="submit">Submit</button>
+    </form>
+    <div id="canvasContainer">
+        <canvas id="cardCanvas" width="500" height="300"></canvas>
+    </div>
+
+    <script>
+        document.getElementById('cardForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const number = document.getElementById('number').value;
+    const year = document.getElementById('year').value;
+    const name = document.getElementById('name').value;
+    const location = document.getElementById('location').value;
+    const logoFile = document.getElementById('logo').files[0];
+    const canvas = document.getElementById('cardCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const img = new Image();
+    img.src = './1.png'; 
+    img.onload = function() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+// Draw the card template image
+ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+// Set font and text properties
+ctx.font = '20px Arial';
+ctx.fillStyle = 'black';
+ctx.fillText(`Year: ${year}`, 20, 80);
+// Draw text onto the canvas
+ctx.fillText(`${number}`, 65, 147); // Adjust the position as needed
+ // Adjust the position as needed
+ctx.fillText(`${name}`, 70, 187);
+ctx.fillText(`${location}`, 70, 227);
+
+if (logoFile) {
+            const logoImg = new Image();
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                logoImg.src = event.target.result;
+                logoImg.onload = function() {
+                    ctx.drawImage(logoImg, 355, 80, 100, 100); // Adjust the position and size as needed
+                };
+            };
+            reader.readAsDataURL(logoFile);
+        }
+    };
+});
+
+    </script>
+</body>
+</html>
